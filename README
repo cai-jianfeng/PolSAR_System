@@ -1,0 +1,4 @@
+PolSAR System
+CNN:common CNN network and train/test mode
+data_process:Data preprocessing and formatting
+plot:label map plot(predict/ground truth)
