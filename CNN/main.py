@@ -33,7 +33,7 @@ transform = transforms.Compose([
     # transforms.Normalize((0.1307, ), (0.3081, ))
 ])
 
-train_dataset = PolSARDataset(data_path='../datas/TR.xlsx', label_path='../datas/label.xlsx', transform=transform)
+train_dataset = PolSARDataset(data_path='../Flevoland4_data/TR.xlsx', label_path='../Flevoland4_data/label.xlsx', transform=transform)
 print(type(train_dataset))
 train_loader = DataLoader(train_dataset,
                           shuffle=True,
@@ -43,7 +43,7 @@ CNN_model = general_CNN.CNN()
 device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
 CNN_model.to(device=device)
 
-criterion = torch.nn.CrossEntropyLoss()
+criterion = torch.nn.MultiLabelSoftMarginLoss()
 optimizer = optim.SGD(params=CNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
 CNN_train = genernal_CNN_mode.CNN_train()
 CNN_test = genernal_CNN_mode.CNN_test()
@@ -51,7 +51,7 @@ CNN_test = genernal_CNN_mode.CNN_test()
 if __name__ == '__main__':
     cost = []
     accuracy = []
-    for epoch in range(50):
+    for epoch in range(2):
         CNN_train.train(model=CNN_model,
                         epoch=epoch,
                         train_loader=train_loader,

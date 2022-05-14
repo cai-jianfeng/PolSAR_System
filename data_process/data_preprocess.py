@@ -25,8 +25,9 @@ class Data:
             data_set = [[0 for _ in range(columns)] for _ in range(rows)]  # 二维数据
             for row in range(rows):
                 for column in range(columns):
-                    cell = sheet.cell(row, column)  # 获取单元格
-                    data = cell.value  # 获取单元格数据
+                    # cell = sheet.cell(row, column)  # 获取单元格
+                    # data = cell.value  # 获取单元格数据
+                    data = sheet.cell_value(row, column)
                     data_set[row][column] = data
             data_sets.append(data_set)
         data_sets = np.array(data_sets)

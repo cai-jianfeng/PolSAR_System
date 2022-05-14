@@ -1,5 +1,4 @@
 %% save T as T_R and T_I
-load('T.mat');
 dim = size(T);
 newT = zeros([dim,9]);
 for i = 1:dim(1)
