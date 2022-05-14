@@ -32,19 +32,20 @@ class PolSARDataset(Dataset):
                     else:
                         pix.append(0)
                 pix = np.array(pix)  # pix.shape: (9,)
-                print('pix.shape:', pix.shape)
+                # print('pix.shape:', pix.shape)
                 pixs.append(pix)
         pixs = np.array(pixs).astype('float32')
-        print('pixs.shape:', pixs.shape)
+        # print('pixs.shape:', pixs.shape)
         pixs = pixs.reshape((5, 5, 9))
-        print('pixs.shape:', pixs.shape)
+        # print('pixs.shape:', pixs.shape)
         # pixs = torch.tensor(pixs, dtype=torch.float64)
         # pixs = np.array(pixs)
         pixs = self.transform(pixs)  # pixs_size: (9, 5, 5)
         label = self.labels[row][column]
-        label = np.array([label], dtype="int64")
-        print('label.shape:', label.shape)
-        label = torch.from_numpy(label)
+        # label = np.array([label], dtype="int64")
+        # print('label.shape:', label.shape)
+        # label = torch.from_numpy(label)
+        label = torch.tensor(label, dtype=torch.int64)
         return pixs, label
     
     def __len__(self):

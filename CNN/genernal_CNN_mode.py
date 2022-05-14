@@ -13,6 +13,7 @@ class CNN_train:
         running_loss = 0.0
         for batch_idx, data in enumerate(train_loader, 0):
             inputs, target = data
+            print('target.shape:', target.shape)
             inputs, target = inputs.to(device), target.to(device)
             optimizer.zero_grad()
             outputs = model(inputs)
@@ -22,10 +23,10 @@ class CNN_train:
             
             running_loss += loss.item()
             
-            if batch_idx % 30 == 29:
-                print('[%d, %5d] loss: %.3f' % (epoch + 1, batch_idx + 1, running_loss / 30))
-                cost.append(running_loss)
-                running_loss = 0.0
+            # if batch_idx % 30 == 29:
+            print('[%d, %5d] loss: %.3f' % (epoch + 1, batch_idx + 1, running_loss / 30))
+            cost.append(running_loss)
+            running_loss = 0.0
 
 
 class CNN_test:
