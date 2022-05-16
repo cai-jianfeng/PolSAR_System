@@ -38,7 +38,7 @@ class Data:
                     data_set[row][column] = data
             data_sets.append(data_set)
         data_sets = np.array(data_sets)
-        self.data_sets = data_sets
+        # self.data_sets = data_sets
         return data_sets
     
     def get_label_list(self, label_path):
@@ -61,7 +61,7 @@ class Data:
         
         label_set = np.array(label_set)
         # print(label_set.shape)  # 1400 * 1200
-        self.label_set = label_set
+        # self.label_set = label_set
         return label_set
 
     def save_data_label_segmentation(self, data_path, label_path, target_path, train_list_path, eval_list_path, patch_size):
@@ -71,14 +71,16 @@ class Data:
         :param patch_size: 切分的数据块的大小([row, column]) --> tuple
         :return: None
         """
-        if self.data_sets:  # 获取数据
-            data_sets = self.data_sets
-        else:
-            data_sets = self.get_data_list(data_path=data_path)
-        if self.label_set:  # 获取标签
-            label_set = self.label_set
-        else:
-            label_set = self.get_label_list(label_path=label_path)
+        # if self.data_sets:  # 获取数据
+        #     data_sets = self.data_sets
+        # else:
+        #     data_sets = self.get_data_list(data_path=data_path)
+        data_sets = self.get_data_list(data_path=data_path)
+        # if self.label_set:  # 获取标签
+        #     label_set = self.label_set
+        # else:
+        #     label_set = self.get_label_list(label_path=label_path)
+        label_set = self.get_label_list(label_path=label_path)
         dim = data_sets.shape  # 数据维度:(channel, row, column)
         num = 0
         train_list = []
@@ -86,18 +88,19 @@ class Data:
         for channel in range(dim[0]):
             for i in range(0, dim[1] - patch_size[0]):
                 for j in range(0, dim[2] - patch_size[1]):
-                    target_path += str(num) + '.xlsx'
-                    book = xlsxwriter.Workbook(filename=target_path)
+                    target_paths = target_path + str(num) + '.xlsx'
+                    book = xlsxwriter.Workbook(filename=target_paths)
                     sheet = book.add_worksheet()
                     for row in range(patch_size[0]):
                         for column in range(patch_size[1]):
                             sheet.write(row, column, data_sets[channel][i + row][j + column])
                     book.close()
-                    label = label_set[i + int((patch_size[0]+1)/2)][j + int((patch_size[1]+1)/2)]
+                    label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
+                    # print(num, ':', label)
                     if num % 20 == 0:
-                        eval_list.append(target_path + '\t%d' % label + '\n')
+                        eval_list.append(target_paths + '\t%d' % label + '\n')
                     else:
-                        train_list.append(target_path + '\t%d' % label + '\n')
+                        train_list.append(target_paths + '\t%d' % label + '\n')
                     num += 1
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
