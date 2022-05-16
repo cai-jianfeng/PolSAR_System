@@ -53,49 +53,49 @@ data.save_data_label_segmentation(data_path=data_path,
                                   patch_size=patch_size)
 print('--------------------train---------------------------')
 
-# # batch_size = 64
-# transform = transforms.Compose([
-#     transforms.ToTensor(),
-#     # transforms.Normalize((0.1307, ), (0.3081, ))
-# ])
-#
-# train_dataset = PolSARDataset(data_path='../data_patch',
-#                               transform=transform)
-# # print(type(train_dataset))
-# train_loader = DataLoader(train_dataset,
-#                           shuffle=True,
-#                           batch_size=batch_size)
-#
-# CNN_model = general_CNN.CNN()
-# device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
-# CNN_model.to(device=device)
-#
-# # criterion = torch.nn.MultiLabelSoftMarginLoss()
-# criterion = torch.nn.CrossEntropyLoss()
-# optimizer = optim.SGD(params=CNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
-# CNN_train = genernal_CNN_mode.CNN_train()
-# CNN_test = genernal_CNN_mode.CNN_test()
-#
-# if __name__ == '__main__':
-#     cost = []
-#     accuracy = []
-#     for epoch in range(2):
-#         CNN_train.train(model=CNN_model,
-#                         epoch=epoch,
-#                         train_loader=train_loader,
-#                         device=device,
-#                         optimizer=optimizer,
-#                         criterion=criterion,
-#                         cost=cost)
-#
-#     plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
-#     plt.ylabel('loss for whole dataset')
-#     plt.xlabel('epoch')
-#     plt.grid()
-#     plt.show()
-#
-#     # plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
-#     # plt.ylabel('accuracy for CNN_test dataset')
-#     # plt.xlabel('epoch')
-#     # plt.grid()
-#     # plt.show()
+# batch_size = 64
+transform = transforms.Compose([
+    transforms.ToTensor(),
+    # transforms.Normalize((0.1307, ), (0.3081, ))
+])
+
+train_dataset = PolSARDataset(data_path='../data_patch',
+                              transform=transform)
+# print(type(train_dataset))
+train_loader = DataLoader(train_dataset,
+                          shuffle=True,
+                          batch_size=batch_size)
+
+CNN_model = general_CNN.CNN()
+device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
+CNN_model.to(device=device)
+
+# criterion = torch.nn.MultiLabelSoftMarginLoss()
+criterion = torch.nn.CrossEntropyLoss()
+optimizer = optim.SGD(params=CNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
+CNN_train = genernal_CNN_mode.CNN_train()
+CNN_test = genernal_CNN_mode.CNN_test()
+
+if __name__ == '__main__':
+    cost = []
+    accuracy = []
+    for epoch in range(2):
+        CNN_train.train(model=CNN_model,
+                        epoch=epoch,
+                        train_loader=train_loader,
+                        device=device,
+                        optimizer=optimizer,
+                        criterion=criterion,
+                        cost=cost)
+
+    plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
+    plt.ylabel('loss for whole dataset')
+    plt.xlabel('epoch')
+    plt.grid()
+    plt.show()
+
+    # plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
+    # plt.ylabel('accuracy for CNN_test dataset')
+    # plt.xlabel('epoch')
+    # plt.grid()
+    # plt.show()

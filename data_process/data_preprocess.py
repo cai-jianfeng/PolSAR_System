@@ -37,7 +37,7 @@ class Data:
                     data = sheet.cell_value(row, column)  # 获取单元格数据
                     data_set[row][column] = data
             data_sets.append(data_set)
-        # data_sets = np.array(data_sets)
+        data_sets = np.array(data_sets)
         # self.data_sets = data_sets
         return data_sets
     
@@ -59,7 +59,7 @@ class Data:
                 label = sheet.cell_value(row, column)  # 获取单元格数据
                 label_set[row][column] = label
         
-        # label_set = np.array(label_set)
+        label_set = np.array(label_set)
         # print(label_set.shape)  # 1400 * 1200
         # self.label_set = label_set
         return label_set
@@ -89,7 +89,7 @@ class Data:
         num = 0
         train_list = []
         eval_list = []
-        
+        flag = 0
         for i in range(0, dim[1] - patch_size[0]):
             for j in range(0, dim[2] - patch_size[1]):
                 target_paths = os.path.join(target_path, 'TR' + str(num) + '.xlsx')
@@ -107,6 +107,11 @@ class Data:
                 else:
                     eval_list.append(target_paths + '\t%d' % label + '\n')
                 num += 1
+                if num == 100:
+                    flag = 1
+                    break
+            if flag == 1:
+                break
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
             for eval_data in eval_list:
