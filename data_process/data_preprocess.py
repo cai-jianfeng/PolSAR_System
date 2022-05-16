@@ -64,7 +64,7 @@ class Data:
         self.label_set = label_set
         return label_set
 
-    def save_data_label_segmentation(self, data_path, label_path, patch_size):
+    def save_data_label_segmentation(self, data_path, label_path, target_path, train_list_path, eval_list_path, patch_size):
         """
         数据集切分（对一整张图像的数据进行切分成patch大小并保存）
         :param data_path: 原始数据(整张图像)的路径 --> str
@@ -81,14 +81,31 @@ class Data:
             label_set = self.get_label_list(label_path=label_path)
         dim = data_sets.shape  # 数据维度:(channel, row, column)
         num = 0
+        train_list = []
+        eval_list = []
         for channel in range(dim[0]):
             for i in range(0, dim[1] - patch_size[0]):
                 for j in range(0, dim[2] - patch_size[1]):
-                    book = xlsxwriter.Workbook(filename='./data_patch/data_TR' + str(num) + '.xlsx')
+                    target_path += str(num) + '.xlsx'
+                    book = xlsxwriter.Workbook(filename=target_path)
                     sheet = book.add_worksheet()
                     for row in range(patch_size[0]):
                         for column in range(patch_size[1]):
                             sheet.write(row, column, data_sets[channel][i + row][j + column])
                     book.close()
+                    label = label_set[i + int((patch_size[0]+1)/2)][j + int((patch_size[1]+1)/2)]
+                    if num % 20 == 0:
+                        eval_list.append(target_path + '\t%d' % label + '\n')
+                    else:
+                        train_list.append(target_path + '\t%d' % label + '\n')
                     num += 1
+        random.shuffle(eval_list)  # 打乱测试集
+        with open(eval_list_path, 'a') as f:
+            for eval_data in eval_list:
+                f.write(eval_data)
+        random.shuffle(train_list)  # 打乱训练集
+        with open(train_list_path, 'a') as f:
+            for train_data in train_list:
+                f.write(train_data)
+        print('生成数据列表完成！')
 
