@@ -37,7 +37,7 @@ class Data:
                     data = sheet.cell_value(row, column)  # 获取单元格数据
                     data_set[row][column] = data
             data_sets.append(data_set)
-        data_sets = np.array(data_sets)
+        # data_sets = np.array(data_sets)
         # self.data_sets = data_sets
         return data_sets
     
@@ -59,7 +59,7 @@ class Data:
                 label = sheet.cell_value(row, column)  # 获取单元格数据
                 label_set[row][column] = label
         
-        label_set = np.array(label_set)
+        # label_set = np.array(label_set)
         # print(label_set.shape)  # 1400 * 1200
         # self.label_set = label_set
         return label_set
@@ -103,9 +103,9 @@ class Data:
                 label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
                 # print(num, ':', label)
                 if num % 20 == 0:
-                    eval_list.append(target_paths + '\t%d' % label + '\n')
-                else:
                     train_list.append(target_paths + '\t%d' % label + '\n')
+                else:
+                    eval_list.append(target_paths + '\t%d' % label + '\n')
                 num += 1
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:

@@ -13,7 +13,7 @@ from CNN import genernal_CNN_mode
 from data_process.data_preprocess import Data
 
 train_parameters = {
-    "input_size": [9, 5, 5],  # 输入的shape
+    "input_size": [9, 10, 10],  # 输入的shape
     "class_dim": 5,  # 分类数
     "data_path": '../Flevoland4_data/TR.xlsx',
     "label_path": '../Flevoland4_data/label.xlsx',
