@@ -16,7 +16,7 @@ class CNN(nn.Module):
         # self.conv4 = nn.Conv2d(64, 128, kernel_size=5, dtype=torch.float32)
         # self.conv5 = nn.Conv2d(128, 10, kernel_size=3)
         self.mp = nn.MaxPool2d(2)
-        self.fc = nn.Linear(128, 10)
+        self.fc = nn.Linear(288, 10)
     
     def forward(self, x):
         in_size = x.size(0)
