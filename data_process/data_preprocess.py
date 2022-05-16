@@ -105,11 +105,11 @@ class Data:
                 label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
                 # print(num, ':', label)
                 if num % 20 == 0:
-                    train_list.append(target_paths + '\t%d' % label + '\n')
-                else:
                     eval_list.append(target_paths + '\t%d' % label + '\n')
+                else:
+                    train_list.append(target_paths + '\t%d' % label + '\n')
                 num += 1
-                if num == 100:
+                if num == 5000:
                     flag = 1
                     break
             if flag == 1:
