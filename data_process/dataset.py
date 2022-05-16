@@ -66,11 +66,13 @@ class PolSARDataset(Dataset):
         # return pixs, label
         data_path = self.data_paths[index]
         data = self.data.get_data_list(data_path=data_path)
+        data = self.data.data_dim_change(data)
         data = np.array(data).astype('float32')
         data = self.transform(data)
         label = self.labels[index]
-        label = np.array([label], dtype='int64')
-        label = torch.from_numpy(label)
+        # label = np.array([label], dtype='int64')
+        # label = torch.from_numpy(label)
+        label = torch.tensor(label, dtype=torch.int64)
         return data, label
         
     def __len__(self):

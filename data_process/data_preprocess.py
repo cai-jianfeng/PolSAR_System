@@ -5,6 +5,8 @@ created on:2022/4/15 11:51
 import os
 import random
 import json
+
+import numpy
 import xlrd
 import numpy as np
 import xlsxwriter
@@ -121,4 +123,14 @@ class Data:
             for train_data in train_list:
                 f.write(train_data)
         print('生成数据列表完成！')
+        
+    def data_dim_change(self, data):
+        dim = data.shape
+        new_data = numpy.zeros((dim[1], dim[2], dim[0]))
+        for channel in range(dim[0]):
+            for row in range(dim[1]):
+                for column in range(dim[2]):
+                    new_data[row][column][channel] = data[channel][row][column]
+        return new_data
+        
 
