@@ -21,7 +21,7 @@ train_parameters = {
     "num_epochs": 2,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
-        "lr": 0.001  # 超参数学习率
+        "lr": 0.005  # 超参数学习率
     }
 }
 # 参数初始化
@@ -60,11 +60,18 @@ transform = transforms.Compose([
 ])
 
 train_dataset = PolSARDataset(data_path='../data_patch',
+                              mode= 'train',
                               transform=transform)
+test_dataset = PolSARDataset(data_path='../data_patch',
+                             mode='eval',
+                             transform=transform)
 # print(type(train_dataset))
 train_loader = DataLoader(train_dataset,
                           shuffle=True,
                           batch_size=batch_size)
+test_loader = DataLoader(test_dataset,
+                         shuffle=False,
+                         batch_size=batch_size)
 
 CNN_model = general_CNN.CNN()
 device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
@@ -87,6 +94,10 @@ if __name__ == '__main__':
                         optimizer=optimizer,
                         criterion=criterion,
                         cost=cost)
+        CNN_test.test(model=CNN_model,
+                      test_loader=test_loader,
+                      device=device,
+                      accuracy=accuracy)
 
     plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
     plt.ylabel('loss for whole dataset')
@@ -94,8 +105,8 @@ if __name__ == '__main__':
     plt.grid()
     plt.show()
 
-    # plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
-    # plt.ylabel('accuracy for CNN_test dataset')
-    # plt.xlabel('epoch')
-    # plt.grid()
-    # plt.show()
+    plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
+    plt.ylabel('accuracy for CNN_test dataset')
+    plt.xlabel('epoch')
+    plt.grid()
+    plt.show()
