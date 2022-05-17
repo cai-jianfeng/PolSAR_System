@@ -77,6 +77,8 @@ class Data:
         :param patch_size: 切分的数据块的大小([row, column]) --> tuple
         :return: None
         """
+        if os.path.getsize(target_path) != 0:
+            return True
         # if self.data_sets:  # 获取数据
         #     data_sets = self.data_sets
         # else:
@@ -123,6 +125,7 @@ class Data:
             for train_data in train_list:
                 f.write(train_data)
         print('生成数据列表完成！')
+        return True
         
     def data_dim_change(self, data):
         dim = data.shape

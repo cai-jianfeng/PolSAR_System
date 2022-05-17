@@ -2,6 +2,8 @@
 created on:2022/4/17 15:36
 @author:caijianfeng
 """
+import os.path
+import os
 from torchvision import transforms
 from torch.utils.data import DataLoader
 import torch
@@ -32,25 +34,27 @@ target_path = train_parameters['target_path']
 train_list_path = '../data_patch/train.txt'
 eval_list_path = '../data_patch/eval.txt'
 patch_size = train_parameters['input_size'][1:3]
+
 '''
 划分训练集和验证集, 乱序, 生成数据列表
 '''
-# # 每次生成数据列表前, 首先清空train.txt和eval.txt
-# with open(train_list_path, 'w') as f:
-#     f.seek(0)  # 将当前文件的当前位置设置为偏移量
-#     f.truncate()
-# with open(eval_list_path, 'w') as f:
-#     f.seek(0)
-#     f.truncate()  # 从当前位置截断
-
-# 分割数据集, 生成数据列表
-# data = Data()
-# data.save_data_label_segmentation(data_path=data_path,
-#                                   label_path=label_path,
-#                                   target_path=target_path,
-#                                   train_list_path=train_list_path,
-#                                   eval_list_path=eval_list_path,
-#                                   patch_size=patch_size)
+if os.path.getsize(target_path) == 0:
+    # 每次生成数据列表前, 首先清空train.txt和eval.txt
+    with open(train_list_path, 'w') as f:
+        f.seek(0)  # 将当前文件的当前位置设置为偏移量
+        f.truncate()
+    with open(eval_list_path, 'w') as f:
+        f.seek(0)
+        f.truncate()  # 从当前位置截断
+    
+    # 分割数据集, 生成数据列表
+    data = Data()
+    data.save_data_label_segmentation(data_path=data_path,
+                                      label_path=label_path,
+                                      target_path=target_path,
+                                      train_list_path=train_list_path,
+                                      eval_list_path=eval_list_path,
+                                      patch_size=patch_size)
 print('--------------------train---------------------------')
 
 # batch_size = 64
@@ -101,7 +105,7 @@ if __name__ == '__main__':
 
     plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
     plt.ylabel('loss for whole dataset')
-    plt.xlabel('epoch')
+    plt.xlabel('num_data / batch_size * epoch')
     plt.grid()
     plt.show()
 
