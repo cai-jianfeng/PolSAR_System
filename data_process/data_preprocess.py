@@ -109,7 +109,7 @@ class Data:
                 else:
                     train_list.append(target_paths + '\t%d' % label + '\n')
                 num += 1
-                if num == 5000:
+                if num == 50000:
                     flag = 1
                     break
             if flag == 1:
