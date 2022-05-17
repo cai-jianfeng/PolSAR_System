@@ -18,7 +18,7 @@ train_parameters = {
     "data_path": '../Flevoland4_data/TR.xlsx',
     "label_path": '../Flevoland4_data/label.xlsx',
     "target_path": '../data_patch',  # 数据集的路径
-    "num_epochs": 2,  # 训练轮数
+    "num_epochs": 20,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
         "lr": 0.005  # 超参数学习率
@@ -35,22 +35,22 @@ patch_size = train_parameters['input_size'][1:3]
 '''
 划分训练集和验证集, 乱序, 生成数据列表
 '''
-# 每次生成数据列表前, 首先清空train.txt和eval.txt
-with open(train_list_path, 'w') as f:
-    f.seek(0)  # 将当前文件的当前位置设置为偏移量
-    f.truncate()
-with open(eval_list_path, 'w') as f:
-    f.seek(0)
-    f.truncate()  # 从当前位置截断
+# # 每次生成数据列表前, 首先清空train.txt和eval.txt
+# with open(train_list_path, 'w') as f:
+#     f.seek(0)  # 将当前文件的当前位置设置为偏移量
+#     f.truncate()
+# with open(eval_list_path, 'w') as f:
+#     f.seek(0)
+#     f.truncate()  # 从当前位置截断
 
 # 分割数据集, 生成数据列表
-data = Data()
-data.save_data_label_segmentation(data_path=data_path,
-                                  label_path=label_path,
-                                  target_path=target_path,
-                                  train_list_path=train_list_path,
-                                  eval_list_path=eval_list_path,
-                                  patch_size=patch_size)
+# data = Data()
+# data.save_data_label_segmentation(data_path=data_path,
+#                                   label_path=label_path,
+#                                   target_path=target_path,
+#                                   train_list_path=train_list_path,
+#                                   eval_list_path=eval_list_path,
+#                                   patch_size=patch_size)
 print('--------------------train---------------------------')
 
 # batch_size = 64
@@ -86,7 +86,7 @@ CNN_test = genernal_CNN_mode.CNN_test()
 if __name__ == '__main__':
     cost = []
     accuracy = []
-    for epoch in range(2):
+    for epoch in range(train_parameters['num_epochs']):
         CNN_train.train(model=CNN_model,
                         epoch=epoch,
                         train_loader=train_loader,

@@ -13,7 +13,7 @@ class CNN_train:
         running_loss = 0.0
         for batch_idx, data in enumerate(train_loader, 0):
             inputs, target = data
-            print('target.shape:', target.shape)
+            # print('target.shape:', target.shape)
             inputs, target = inputs.to(device), target.to(device)
             optimizer.zero_grad()
             outputs = model(inputs)
