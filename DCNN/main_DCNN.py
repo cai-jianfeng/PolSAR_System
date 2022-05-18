@@ -1,5 +1,5 @@
 """
-created on:2022/4/17 15:36
+created on:2022/5/17 23:17
 @author:caijianfeng
 """
 import os.path
@@ -10,16 +10,16 @@ import torch
 import torch.optim as optim
 import matplotlib.pyplot as plt
 from data_process.dataset import PolSARDataset
-from CNN import general_CNN
+from DCNN import DoubleCNN
 from CNN import genernal_CNN_mode
 from data_process.data_preprocess import Data
 
 train_parameters = {
-    "input_size": [9, 9, 9],  # 输入的shape
+    "input_size": [18, 9, 9],  # 输入的shape
     "class_dim": 5,  # 分类数
-    "data_path": '../Flevoland4_data/TR.xlsx',
+    "data_path": ('../Flevoland4_data/T_R.xlsx', '../Flevoland4_data/T_I.xlsx'),
     "label_path": '../Flevoland4_data/label.xlsx',
-    "target_path": '../data_patch/T_R',  # 数据集的路径
+    "target_path": '../data_patch/TRI',  # 数据集的路径
     "num_epochs": 20,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
@@ -31,8 +31,8 @@ batch_size = train_parameters['train_batch_size']
 data_path = train_parameters['data_path']
 label_path = train_parameters['label_path']
 target_path = train_parameters['target_path']
-train_list_path = '../data_patch/T_R/train.txt'
-eval_list_path = '../data_patch/T_R/eval.txt'
+train_list_path = '../data_patch/TRI/train.txt'
+eval_list_path = '../data_patch/TRI/eval.txt'
 patch_size = train_parameters['input_size'][1:3]
 
 '''
@@ -49,7 +49,7 @@ if os.path.getsize(target_path) == 0:
     
     # 分割数据集, 生成数据列表
     data = Data()
-    data.save_data_label_segmentation_T_R(data_path=data_path,
+    data.save_data_label_segmentation_TRI(data_path=data_path,
                                           label_path=label_path,
                                           target_path=target_path,
                                           train_list_path=train_list_path,
@@ -63,10 +63,10 @@ transform = transforms.Compose([
     # transforms.Normalize((0.1307, ), (0.3081, ))
 ])
 
-train_dataset = PolSARDataset(data_path='../data_patch/T_R',
-                              mode= 'train',
+train_dataset = PolSARDataset(data_path='../data_patch/TRI',
+                              mode='train',
                               transform=transform)
-test_dataset = PolSARDataset(data_path='../data_patch/T_R',
+test_dataset = PolSARDataset(data_path='../data_patch/TRI',
                              mode='eval',
                              transform=transform)
 # print(type(train_dataset))
@@ -77,13 +77,13 @@ test_loader = DataLoader(test_dataset,
                          shuffle=False,
                          batch_size=batch_size)
 
-CNN_model = general_CNN.CNN()
+DCNN_model = DoubleCNN.Double_CNN()
 device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
-CNN_model.to(device=device)
+DCNN_model.to(device=device)
 
 # criterion = torch.nn.MultiLabelSoftMarginLoss()
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(params=CNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
+optimizer = optim.SGD(params=DCNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
 CNN_train = genernal_CNN_mode.CNN_train()
 CNN_test = genernal_CNN_mode.CNN_test()
 
@@ -91,28 +91,30 @@ if __name__ == '__main__':
     cost = []
     accuracy = []
     for epoch in range(train_parameters['num_epochs']):
-        CNN_train.train(model=CNN_model,
+        CNN_train.train(model=DCNN_model,
                         epoch=epoch,
                         train_loader=train_loader,
                         device=device,
                         optimizer=optimizer,
                         criterion=criterion,
                         cost=cost)
-        CNN_test.test(model=CNN_model,
+        CNN_test.test(model=DCNN_model,
                       test_loader=test_loader,
                       device=device,
                       accuracy=accuracy)
     # 保存模型参数
-    torch.save(CNN_model.state_dict(), "./CNN_model_parameter.pkl")
+    torch.save(DCNN_model.state_dict(), "./DCNN_model_parameter.pkl")
     
     plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
     plt.ylabel('loss for whole dataset')
     plt.xlabel('num_data / batch_size * epoch')
     plt.grid()
     plt.show()
+    plt.savefig('../plot/loss/loss_Flevoland4_DCNN.png')
 
     plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
     plt.ylabel('accuracy for CNN_test dataset')
     plt.xlabel('epoch')
     plt.grid()
     plt.show()
+    plt.savefig('../plot/accuracy/accuracy_Flevoland4_DCNN.png')
