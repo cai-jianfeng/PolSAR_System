@@ -94,7 +94,7 @@ class Data:
         flag = 0
         for i in range(0, dim[1] - patch_size[0]):
             for j in range(0, dim[2] - patch_size[1]):
-                target_paths = os.path.join(target_path, 'TRI' + str(num) + '.xlsx')
+                target_paths = os.path.join(target_path, 'TR' + str(num) + '.xlsx')
                 book = xlsxwriter.Workbook(filename=target_paths)
                 for channel in range(dim[0]):
                     sheet = book.add_worksheet('sheet' + str(channel))

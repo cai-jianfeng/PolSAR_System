@@ -39,6 +39,7 @@ patch_size = train_parameters['input_size'][1:3]
 划分训练集和验证集, 乱序, 生成数据列表
 '''
 if os.path.getsize(target_path) == 0:
+    print('------------------数据生成开始------------------')
     # 每次生成数据列表前, 首先清空train.txt和eval.txt
     with open(train_list_path, 'w') as f:
         f.seek(0)  # 将当前文件的当前位置设置为偏移量
@@ -64,7 +65,7 @@ transform = transforms.Compose([
 ])
 
 train_dataset = PolSARDataset(data_path='../data_patch/T_R',
-                              mode= 'train',
+                              mode='train',
                               transform=transform)
 test_dataset = PolSARDataset(data_path='../data_patch/T_R',
                              mode='eval',
@@ -110,9 +111,11 @@ if __name__ == '__main__':
     plt.xlabel('num_data / batch_size * epoch')
     plt.grid()
     plt.show()
-
+    plt.savefig('../plot/loss/loss_Flevoland4_CNN.png')
+    
     plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
     plt.ylabel('accuracy for CNN_test dataset')
     plt.xlabel('epoch')
     plt.grid()
     plt.show()
+    plt.savefig('../plot/accuracy/accuracy_Flevoland4_CNN.png')
