@@ -39,6 +39,7 @@ patch_size = train_parameters['input_size'][1:3]
 划分训练集和验证集, 乱序, 生成数据列表
 '''
 if os.path.getsize(target_path) == 0:
+    print('------------------数据生成开始------------------')
     # 每次生成数据列表前, 首先清空train.txt和eval.txt
     with open(train_list_path, 'w') as f:
         f.seek(0)  # 将当前文件的当前位置设置为偏移量
@@ -105,16 +106,16 @@ if __name__ == '__main__':
     # 保存模型参数
     torch.save(DCNN_model.state_dict(), "./DCNN_model_parameter.pkl")
     
-    plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
+    plt.plot(list(range(len(cost))), cost, 'r', label='DCNN')
     plt.ylabel('loss for whole dataset')
     plt.xlabel('num_data / batch_size * epoch')
     plt.grid()
+    plt.savefig('../plot/loss/loss_Flevoland4_DCNN2.png')
     plt.show()
-    plt.savefig('../plot/loss/loss_Flevoland4_DCNN.png')
 
-    plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
-    plt.ylabel('accuracy for CNN_test dataset')
+    plt.plot(list(range(len(accuracy))), accuracy, 'r', label='DCNN')
+    plt.ylabel('accuracy for DCNN_test dataset')
     plt.xlabel('epoch')
     plt.grid()
+    plt.savefig('../plot/accuracy/accuracy_Flevoland4_DCNN2.png')
     plt.show()
-    plt.savefig('../plot/accuracy/accuracy_Flevoland4_DCNN.png')
