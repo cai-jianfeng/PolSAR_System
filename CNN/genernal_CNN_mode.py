@@ -45,5 +45,5 @@ class CNN_test:
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
             
-            print('Acuuracy on CNN_test set: %d %%' % (100 * correct / total))
+            print('Acuuracy on NN_test set: %d %%' % (100 * correct / total))
             accuracy.append(100 * correct / total)

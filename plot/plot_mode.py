@@ -48,9 +48,11 @@ class plot_mode:
             save_path = './' + self.mode + '/' + label_pic_name + '.jpg'
             cv2.imwrite(save_path, label_map)
     
-    def plt_image(self, title, x_data, y_data, label, save_path, color='r'):
+    def plt_image(self, title, x_data, y_data, label, xlabel, ylabel, save_path, color='r'):
         """
         绘制loss、accuracy等数值型折线图
+        :param xlabel: 纵坐标 --> str
+        :param ylabel: 横坐标 --> str
         :param label: 图标 --> str
         :param color: 折线颜色 --> str
         :param title: 图像标题 --> str
@@ -62,7 +64,9 @@ class plot_mode:
         plt.clf()  # 请空之前图像
         plt.title(title)
         plt.grid(linestyle=":")
+        plt.xlabel(xlabel)
+        plt.ylabel(ylabel)
         plt.plot(x_data, y_data, color, label=label)
         plt.tight_layout()  # 自动调整子图参数，使之填充整个图像区域
-        plt.show()
         plt.savefig(save_path)
+        plt.show()

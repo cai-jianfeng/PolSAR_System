@@ -13,13 +13,14 @@ from data_process.dataset import PolSARDataset
 from SNN import GoogleNet
 from CNN import genernal_CNN_mode
 from data_process.data_preprocess import Data
+from plot.plot_mode import plot_mode
 
 train_parameters = {
     "input_size": [9, 9, 9],  # 输入的shape
     "class_dim": 5,  # 分类数
     "data_path": '../Flevoland4_data/TR.xlsx',
     "label_path": '../Flevoland4_data/label.xlsx',
-    "target_path": '../data_patch',  # 数据集的路径
+    "target_path": '../data_patch/T_R',  # 数据集的路径
     "num_epochs": 20,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
@@ -31,14 +32,15 @@ batch_size = train_parameters['train_batch_size']
 data_path = train_parameters['data_path']
 label_path = train_parameters['label_path']
 target_path = train_parameters['target_path']
-train_list_path = '../data_patch/train.txt'
-eval_list_path = '../data_patch/eval.txt'
+train_list_path = '../data_patch/T_R/train.txt'
+eval_list_path = '../data_patch/T_R/eval.txt'
 patch_size = train_parameters['input_size'][1:3]
 
 '''
 划分训练集和验证集, 乱序, 生成数据列表
 '''
 if os.path.getsize(target_path) == 0:
+    print('------------------数据生成开始------------------')
     # 每次生成数据列表前, 首先清空train.txt和eval.txt
     with open(train_list_path, 'w') as f:
         f.seek(0)  # 将当前文件的当前位置设置为偏移量
@@ -49,7 +51,7 @@ if os.path.getsize(target_path) == 0:
     
     # 分割数据集, 生成数据列表
     data = Data()
-    data.save_data_label_segmentation(data_path=data_path,
+    data.save_data_label_segmentation_T_R(data_path=data_path,
                                       label_path=label_path,
                                       target_path=target_path,
                                       train_list_path=train_list_path,
@@ -63,10 +65,10 @@ transform = transforms.Compose([
     # transforms.Normalize((0.1307, ), (0.3081, ))
 ])
 
-train_dataset = PolSARDataset(data_path='../data_patch',
+train_dataset = PolSARDataset(data_path='../data_patch/T_R',
                               mode='train',
                               transform=transform)
-test_dataset = PolSARDataset(data_path='../data_patch',
+test_dataset = PolSARDataset(data_path='../data_patch/T_R',
                              mode='eval',
                              transform=transform)
 # print(type(train_dataset))
@@ -98,19 +100,27 @@ if __name__ == '__main__':
                         optimizer=optimizer,
                         criterion=criterion,
                         cost=cost)
-        CNN_test.test(model=GoogleNet_model,
+        CNN_test.test (model=GoogleNet_model,
                       test_loader=test_loader,
                       device=device,
                       accuracy=accuracy)
+    # 保存模型参数
+    torch.save(GoogleNet_model.state_dict(), "./Google_model_parameter.pkl")
     
-    plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
-    plt.ylabel('loss for whole dataset')
-    plt.xlabel('num_data / batch_size * epoch')
-    plt.grid()
-    plt.show()
-    
-    plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
-    plt.ylabel('accuracy for CNN_test dataset')
-    plt.xlabel('epoch')
-    plt.grid()
-    plt.show()
+    plot_mode = plot_mode()
+    plot_mode.plt_image(title='GoogleNet',
+                        x_data=list(range(len(cost))),
+                        y_data=cost,
+                        label='GoogleNet',
+                        xlabel='num_data / batch_size * epoch',
+                        ylabel='loss for whole dataset',
+                        save_path='../plot/loss/lossFlevoland4_GoogleNet.png',
+                        color='r')
+    plot_mode.plt_image(title='GoogleNet',
+                        x_data=list(range(len(accuracy))),
+                        y_data=accuracy,
+                        label='GoogleNet',
+                        xlabel='epoch',
+                        ylabel='accuracy for GoogleNet_test dataset',
+                        save_path='../plot/accuracy/accuracy_Flevoland4_GoogleNet.png',
+                        color='r')
