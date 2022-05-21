@@ -39,7 +39,7 @@ class Net(nn.Module):
         self.conv1 = nn.Conv2d(9, 10, kernel_size=3)
         self.incep1 = InceptionA(in_channels=10)
         self.mp = nn.MaxPool2d(2)
-        self.fc = nn.Linear(792, 10)
+        self.fc = nn.Linear(792, 5)
     
     def forward(self, x):
         in_size = x.size(0)

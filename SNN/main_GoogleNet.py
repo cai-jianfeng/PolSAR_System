@@ -52,11 +52,11 @@ if os.path.getsize(target_path) == 0:
     # 分割数据集, 生成数据列表
     data = Data()
     data.save_data_label_segmentation_T_R(data_path=data_path,
-                                      label_path=label_path,
-                                      target_path=target_path,
-                                      train_list_path=train_list_path,
-                                      eval_list_path=eval_list_path,
-                                      patch_size=patch_size)
+                                          label_path=label_path,
+                                          target_path=target_path,
+                                          train_list_path=train_list_path,
+                                          eval_list_path=eval_list_path,
+                                          patch_size=patch_size)
 print('--------------------train---------------------------')
 
 # batch_size = 64
