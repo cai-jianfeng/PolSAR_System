@@ -105,7 +105,7 @@ if __name__ == '__main__':
                       device=device,
                       accuracy=accuracy)
     # 保存模型参数
-    torch.save(GoogleNet_model.state_dict(), "./Google_model_parameter.pkl")
+    torch.save(GoogleNet_model.state_dict(), "./Google_model_parameter2.pkl")
     
     plot_mode = plot_mode()
     plot_mode.plt_image(title='GoogleNet',
@@ -114,7 +114,7 @@ if __name__ == '__main__':
                         label='GoogleNet',
                         xlabel='num_data / batch_size * epoch',
                         ylabel='loss for whole dataset',
-                        save_path='../plot/loss/lossFlevoland4_GoogleNet.png',
+                        save_path='../plot/loss/lossFlevoland4_GoogleNet2.png',
                         color='r')
     plot_mode.plt_image(title='GoogleNet',
                         x_data=list(range(len(accuracy))),
@@ -122,5 +122,5 @@ if __name__ == '__main__':
                         label='GoogleNet',
                         xlabel='epoch',
                         ylabel='accuracy for GoogleNet_test dataset',
-                        save_path='../plot/accuracy/accuracy_Flevoland4_GoogleNet.png',
+                        save_path='../plot/accuracy/accuracy_Flevoland4_GoogleNet2.png',
                         color='r')
