@@ -1,4 +1,6 @@
 PolSAR System
-CNN:common CNN network and train/test mode
+CNN:common CNN network and train/test mode and trained parameters
+DCNN:double channel CNN and trained parameters
+SNN:GoogleNet and ResNet and trained parameters
 data_process:Data preprocessing and formatting
-plot:label map plot(predict/ground truth)
+plot:label map plot(predict/ground truth) and loss/accuracy

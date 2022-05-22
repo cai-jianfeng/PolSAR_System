@@ -9,7 +9,7 @@ from data_process.data_preprocess import Data
 
 # label_workbook = xlrd.open_workbook('../datas/label.xlsx')
 # label_sheet = label_workbook.sheet_by_index(0)
-label_path = '../Flevoland4_data/label.xlsx'
+label_path = '../data/prepro_flevoland4/pre_data/label.xlsx'
 data_pro = Data()
 labels = data_pro.get_label_list(label_path=label_path)
 # rows = label_sheet.nrows

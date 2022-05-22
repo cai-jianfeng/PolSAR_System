@@ -40,6 +40,7 @@ class Data:
                     data_set[row][column] = data
             data_sets.append(data_set)
         data_sets = np.array(data_sets)
+        data_sets = self.data_dim_change(data_sets)
         # self.data_sets = data_sets
         return data_sets
     
@@ -65,10 +66,32 @@ class Data:
         # print(label_set.shape)  # 1400 * 1200
         # self.label_set = label_set
         return label_set
-
-    def save_data_label_segmentation_T_R(self, data_path, label_path, target_path, train_list_path, eval_list_path, patch_size):
+    
+    def get_data(self, data_paths, dim):
+        """
+        获取预处理好的数据集
+        :param dim: 图像的长宽 --> tuple (row, column)
+        :param data_paths:预处理好的数据集路径 --> list
+        :return: list (n维数据)
+        """
+        datas = []  # n维数据
+        num = 0
+        for row in range(dim[0]):
+            data_sets = []
+            for column in range(dim[1]):
+                data_path = data_paths[num]
+                data_set = self.get_data_list(data_path=data_path)
+                data_sets.append(data_set)
+                num += 1
+            datas.append(data_sets)
+        datas = np.array(datas).astype('float32')
+        return datas
+    
+    def save_data_label_segmentation_T_R(self, data_path, label_path, target_path, train_list_path, eval_list_path,
+                                         patch_size, predict_list_path=None):
         """
         数据集切分（对一整张图像的数据进行切分成patch大小并保存）
+        :param predict_list_path: 预测集说明文件 --> str
         :param data_path: 原始数据(整张图像)的路径 --> str
         :param label_path: 原始标签(整张图像)的路径 --> str
         :param target_path: 分割后的数据集保存位置(文件夹) --> str
@@ -89,8 +112,11 @@ class Data:
         label_set = self.get_label_list(label_path=label_path)
         dim = data_sets.shape  # 数据维度:(channel, row, column)
         num = 0
+        sum_train_list, sum_eval_list, sum_predict_list = 0, 0, 0
         train_list = []
         eval_list = []
+        predict_list = []
+        data_detail_list = {}
         flag = 0
         for i in range(0, dim[1] - patch_size[0]):
             for j in range(0, dim[2] - patch_size[1]):
@@ -106,14 +132,18 @@ class Data:
                 # print(num, ':', label)
                 if num % 20 == 0:
                     eval_list.append(target_paths + '\t%d' % label + '\n')
+                    sum_eval_list += 1
                 else:
                     train_list.append(target_paths + '\t%d' % label + '\n')
+                    sum_train_list += 1
+                predict_list.append(target_paths + '\t%d' % label + '\n')
+                sum_predict_list += 1
                 num += 1
-                if num == 100000:
-                    flag = 1
-                    break
-            if flag == 1:
-                break
+            #     if num == 100:
+            #         flag = 1
+            #         break
+            # if flag == 1:
+            #     break
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
             for eval_data in eval_list:
@@ -122,10 +152,22 @@ class Data:
         with open(train_list_path, 'a') as f:
             for train_data in train_list:
                 f.write(train_data)
+        with open(predict_list_path, 'a') as f:
+            for predict_data in predict_list:
+                f.write(predict_data)
+        data_detail_list['data_list_path'] = target_path
+        data_detail_list['dim'] = [dim[1] - patch_size[0], dim[2] - patch_size[1]]
+        data_detail_list['train_num'] = sum_train_list
+        data_detail_list['eval_num'] = sum_eval_list
+        data_detail_list['predict_num'] = sum_predict_list
+        jsons = json.dumps(data_detail_list, sort_keys=True, indent=4, separators=(',', ':'))
+        with open(os.path.join(target_path, 'readme.json'), 'w') as f:
+            f.write(jsons)
         print('生成数据列表完成！')
         return True
     
-    def save_data_label_segmentation_TRI(self, data_path, label_path, target_path, train_list_path, eval_list_path, patch_size):
+    def save_data_label_segmentation_TRI(self, data_path, label_path, target_path, train_list_path, eval_list_path,
+                                         patch_size):
         """
         数据集切分（对一整张图像的数据进行切分成patch大小并保存）
         :param data_path: 原始数据(整张图像)的路径(实部, 虚部) --> tuple
@@ -168,11 +210,11 @@ class Data:
                 else:
                     train_list.append(target_paths + '\t%d' % label + '\n')
                 num += 1
-                if num == 100000:
-                    flag = 1
-                    break
-            if flag == 1:
-                break
+            #     if num == 100000:
+            #         flag = 1
+            #         break
+            # if flag == 1:
+            #     break
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
             for eval_data in eval_list:
@@ -183,7 +225,7 @@ class Data:
                 f.write(train_data)
         print('生成数据列表完成！')
         return True
-        
+    
     def data_dim_change(self, data):
         dim = data.shape
         new_data = numpy.zeros((dim[1], dim[2], dim[0]))
@@ -192,5 +234,3 @@ class Data:
                 for column in range(dim[2]):
                     new_data[row][column][channel] = data[channel][row][column]
         return new_data
-        
-

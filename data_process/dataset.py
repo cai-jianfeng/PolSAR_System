@@ -26,13 +26,20 @@ class PolSARDataset(Dataset):
                 data_T_path, label = data_info.strip().split('\t')
                 self.data_paths.append(data_T_path)
                 self.labels.append(int(label))
-        else:
+        elif mode == 'eval':
             with open(os.path.join(self.data_path, 'eval.txt'), 'r', encoding='utf-8') as f:
                 self.info = f.readlines()
             for data_info in self.info:
                 data_T_path, label = data_info.strip().split('\t')
                 self.data_paths.append(data_T_path)
                 self.labels.append(int(label))
+        # else:
+        #     with open(os.path.join(self.data_path, 'predict.txt'), 'r', encoding='utf-8') as f:
+        #         self.info = f.readlines()
+        #     for data_info in self.info:
+        #         data_T_path, label = data_info.strip().split('\t')
+        #         self.data_paths.append(data_T_path)
+        #         self.labels.append(int(label))
     
     def __getitem__(self, index):
         # pixs = []
@@ -66,7 +73,7 @@ class PolSARDataset(Dataset):
         # return pixs, label
         data_path = self.data_paths[index]
         data = self.data.get_data_list(data_path=data_path)
-        data = self.data.data_dim_change(data)
+        # data = self.data.data_dim_change(data)
         data = np.array(data).astype('float32')
         data = self.transform(data)
         label = self.labels[index]

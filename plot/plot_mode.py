@@ -18,7 +18,7 @@ class plot_mode:
         """
         self.mode = mode
     
-    def plot_labels(self, laebl_path=None, color_path=None, label_pic_name=None):
+    def plot_labels(self, label_path=None, color_path=None, label_pic_name=None):
         if color_path:
             color_sheets = xlrd.open_workbook(color_path)
             color_sheet = color_sheets.sheet_by_index(0)
@@ -27,8 +27,8 @@ class plot_mode:
             for i in range(rows):
                 color = [color_sheet.cell_value(i, 0), color_sheet.cell_value(i, 1), color_sheet.cell_value(i, 2)]
                 colors.append(color)
-        if laebl_path:
-            labels_sheets = xlrd.open_workbook(laebl_path)
+        if label_path:
+            labels_sheets = xlrd.open_workbook(label_path)
             labels_sheet = labels_sheets.sheet_by_index(0)
             rows = labels_sheet.nrows
             cols = labels_sheet.ncols

@@ -18,8 +18,8 @@ from plot.plot_mode import plot_mode
 train_parameters = {
     "input_size": [9, 9, 9],  # 输入的shape
     "class_dim": 5,  # 分类数
-    "data_path": '../Flevoland4_data/TR.xlsx',
-    "label_path": '../Flevoland4_data/label.xlsx',
+    "data_path": '../data/prepro_flevoland4/pre_data/TR.xlsx',
+    "label_path": '../data/prepro_flevoland4/pre_data/label.xlsx',
     "target_path": '../data_patch/T_R',  # 数据集的路径
     "num_epochs": 20,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
