@@ -207,7 +207,7 @@ class Data:
                 # print(num, ':', label)
                 if num % 20 == 0:
                     train_list.append(target_paths + '\t%d' % label + '\n')
-                else:
+                elif num % 100 == 0:
                     eval_list.append(target_paths + '\t%d' % label + '\n')
                 num += 1
             #     if num == 100000:

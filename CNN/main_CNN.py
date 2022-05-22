@@ -33,6 +33,7 @@ label_path = train_parameters['label_path']
 target_path = train_parameters['target_path']
 train_list_path = '../data_patch/T_R/train.txt'
 eval_list_path = '../data_patch/T_R/eval.txt'
+predict_list_path = '../data_patch/T_R/predict.txt'
 patch_size = train_parameters['input_size'][1:3]
 
 '''
@@ -55,7 +56,8 @@ if os.path.getsize(target_path) == 0:
                                           target_path=target_path,
                                           train_list_path=train_list_path,
                                           eval_list_path=eval_list_path,
-                                          patch_size=patch_size)
+                                          patch_size=patch_size,
+                                          predict_list_path=predict_list_path)
 print('--------------------train---------------------------')
 
 # batch_size = 64
