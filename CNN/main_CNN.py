@@ -113,11 +113,11 @@ if __name__ == '__main__':
     plt.xlabel('num_data / batch_size * epoch')
     plt.grid()
     plt.show()
-    plt.savefig('../plot/loss/loss_Flevoland4_CNN.png')
+    plt.savefig('../plot/loss/loss_whole_Flevoland4_CNN.png')
     
     plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
     plt.ylabel('accuracy for CNN_test dataset')
     plt.xlabel('epoch')
     plt.grid()
     plt.show()
-    plt.savefig('../plot/accuracy/accuracy_Flevoland4_CNN.png')
+    plt.savefig('../plot/accuracy/accuracy_whole_Flevoland4_CNN.png')
