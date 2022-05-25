@@ -106,7 +106,7 @@ if __name__ == '__main__':
                       device=device,
                       accuracy=accuracy)
     # 保存模型参数
-    torch.save(CNN_model.state_dict(), "./CNN_model_parameter2.pkl")
+    torch.save(CNN_model.state_dict(), "CNN_model_parameter_whole_dataset.pkl")
     
     plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
     plt.ylabel('loss for whole dataset')
