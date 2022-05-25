@@ -45,9 +45,11 @@ class CNN_test:
             for data in test_loader:
                 images, labels = data
                 images, labels = images.to(device), labels.to(device)
-                print('img_shape:', images.shape)
+                # print('img_shape:', images.shape)
+                print('label:', labels)
                 outputs = model(images)
                 _, predicted = torch.max(outputs.data, dim=1)
+                print('predict:', predicted)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
             
@@ -59,7 +61,7 @@ class CNN_predict:
     def predict(self, model, predict_datas, target_path, color_path, label_pic_name, transform, device):
         rows = predict_datas.shape[0]
         columns = predict_datas.shape[1]
-        predict_labels = [[0 for _ in range(columns)] for _ in range(rows)]
+        # predict_labels = [[0 for _ in range(columns)] for _ in range(rows)]
         target_path = os.path.join(target_path, 'predict_labels' + '.xlsx')
         book = xlsxwriter.Workbook(filename=target_path)
         sheet = book.add_worksheet('sheet')
@@ -71,10 +73,12 @@ class CNN_predict:
                 predict_data = torch.tensor(predict_data, dtype=torch.float32)
                 predict_data = predict_data.to(device)
                 predict_label = model(predict_data)
-                predict_label = torch.max(predict_label.data, dim=1)
+                _, predict_label = torch.max(predict_label.data, dim=1)
                 print('predict_label:', predict_label)
-                predict_labels[row][column] = predict_label
-                sheet.write(row, column, predict_label.values)
+                # predict_label = round(predict_label.values)
+                # predict_labels[row][column] = predict_label
+                sheet.write(row, column, predict_label.item())
+                print('predict_label_value:', predict_label.item())
         book.close()
         plot_mod = plot_mode(mode='predict')
         plot_mod.plot_labels(label_path=target_path,

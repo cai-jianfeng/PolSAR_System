@@ -8,7 +8,7 @@ import os
 CNN_model = CNN()
 CNN_parameters = torch.load('../CNN/CNN_model_parameter_whole_dataset.pkl')  # 加载训练好的模型参数
 CNN_model.load_state_dict(CNN_parameters)
-device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 CNN_model.to(device=device)
 data_path = '../data/prepro_flevoland4/pre_data/TR.xlsx'
 data_paths = []

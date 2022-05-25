@@ -21,7 +21,7 @@ train_parameters = {
     "label_path": '../data/prepro_flevoland4/pre_data/label.xlsx',
     "target_path": '../data_patch/T_R',  # 数据集的路径
     "num_epochs": 20,  # 训练轮数
-    "train_batch_size": 1,  # 批次的大小
+    "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
         "lr": 0.005  # 超参数学习率
     }
@@ -81,7 +81,7 @@ test_loader = DataLoader(test_dataset,
                          batch_size=batch_size)
 
 CNN_model = general_CNN.CNN()
-device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 CNN_model.to(device=device)
 
 # criterion = torch.nn.MultiLabelSoftMarginLoss()
@@ -112,12 +112,13 @@ if __name__ == '__main__':
     plt.ylabel('loss for whole dataset')
     plt.xlabel('num_data / batch_size * epoch')
     plt.grid()
-    plt.show()
     plt.savefig('../plot/loss/loss_whole_Flevoland4_CNN.png')
+    plt.show()
     
     plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
     plt.ylabel('accuracy for CNN_test dataset')
     plt.xlabel('epoch')
     plt.grid()
-    plt.show()
     plt.savefig('../plot/accuracy/accuracy_whole_Flevoland4_CNN.png')
+    plt.show()
+
