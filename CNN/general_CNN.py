@@ -10,8 +10,8 @@ import torch.nn.functional as F
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
-        self.conv1 = nn.Conv2d(9, 16, kernel_size=3, padding=2, dtype=torch.float32)
-        self.conv2 = nn.Conv2d(16, 32, kernel_size=3,padding=2, dtype=torch.float32)
+        self.conv1 = nn.Conv2d(9, 16, kernel_size=3, padding=2)
+        self.conv2 = nn.Conv2d(16, 32, kernel_size=3,padding=2)
         # self.conv3 = nn.Conv2d(32, 64, kernel_size=6, dtype=torch.float32)
         # self.conv4 = nn.Conv2d(64, 128, kernel_size=5, dtype=torch.float32)
         # self.conv5 = nn.Conv2d(128, 10, kernel_size=3)

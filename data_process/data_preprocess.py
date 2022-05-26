@@ -101,8 +101,11 @@ class Data:
         :return: None
         """
         data_sets = self.get_data_list(data_path=data_path)
+        print("原始数据获取完成")
         label_set = self.get_label_list(label_path=label_path)
+        print("原始标签获取完成")
         dim = data_sets.shape  # 数据维度:(channel, row, column)
+        print("data_dim:", dim)
         num = 0
         sum_train_list, sum_eval_list, sum_predict_list = 0, 0, 0
         train_list = []
@@ -113,14 +116,14 @@ class Data:
         for i in range(0, dim[0] - patch_size[0]):
             for j in range(0, dim[1] - patch_size[1]):
                 target_paths = os.path.join(target_path, 'TR' + str(num) + '.xlsx')
-                if not os.path.exists(target_paths):
-                    book = xlsxwriter.Workbook(filename=target_paths)
-                    for channel in range(dim[2]):
-                        sheet = book.add_worksheet('sheet' + str(channel))
-                        for row in range(patch_size[0]):
-                            for column in range(patch_size[1]):
-                                sheet.write(row, column, data_sets[i + row][j + column][channel])
-                    book.close()
+                # if not os.path.exists(target_paths):
+                book = xlsxwriter.Workbook(filename=target_paths)
+                for channel in range(dim[2]):
+                    sheet = book.add_worksheet('sheet' + str(channel))
+                    for row in range(patch_size[0]):
+                        for column in range(patch_size[1]):
+                            sheet.write(row, column, data_sets[i + row][j + column][channel])
+                book.close()
                 label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
                 # print(num, ':', label)
                 if num % 1000 == 0:
@@ -132,11 +135,7 @@ class Data:
                 predict_list.append(target_paths + '\t%d' % label + '\n')
                 sum_predict_list += 1
                 num += 1
-                if num == 100:
-                    flag = 1
-                    break
-            if flag == 1:
-                break
+
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
             for eval_data in eval_list:
@@ -193,7 +192,7 @@ class Data:
                         sheet = book.add_worksheet('sheet_R' + str(channel))
                         for row in range(patch_size[0]):
                             for column in range(patch_size[1]):
-                                sheet.write(row, column, data_R_sets[channel][i + row][j + column])
+                                sheet.write(row, column, data_R_sets[i + row][j + column][channel])
                     for channel in range(dim[2]):
                         sheet = book.add_worksheet('sheet_I' + str(channel))
                         for row in range(patch_size[0]):
@@ -202,19 +201,14 @@ class Data:
                     book.close()
                 label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
                 # print(num, ':', label)
-                if num % 20 == 0:
+                if num % 100 == 0:
                     train_list.append(target_paths + '\t%d' % label + '\n')
-                elif num % 100 == 0:
+                if num % 1000 == 0:
                     eval_list.append(target_paths + '\t%d' % label + '\n')
+                predict_list.append(target_paths + '\t%d' % label + '\n')
+                sum_predict_list += 1
                 num += 1
-            predict_list.append(target_paths + '\t%d' % label + '\n')
-            sum_predict_list += 1
-            num += 1
-            #     if num == 100:
-            #         flag = 1
-            #         break
-            # if flag == 1:
-            #     break
+
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
             for eval_data in eval_list:

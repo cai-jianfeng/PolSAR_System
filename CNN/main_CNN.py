@@ -20,7 +20,7 @@ train_parameters = {
     "data_path": '../data/prepro_flevoland4/pre_data/TR.xlsx',
     "label_path": '../data/prepro_flevoland4/pre_data/label.xlsx',
     "target_path": '../data_patch/T_R',  # 数据集的路径
-    "num_epochs": 20,  # 训练轮数
+    "num_epochs": 40,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
         "lr": 0.005  # 超参数学习率
@@ -48,7 +48,7 @@ if os.path.getsize(target_path) == 0:
     with open(eval_list_path, 'w') as f:
         f.seek(0)
         f.truncate()  # 从当前位置截断
-    
+
     # 分割数据集, 生成数据列表
     data = Data()
     data.save_data_label_segmentation_T_R(data_path=data_path,
@@ -106,19 +106,18 @@ if __name__ == '__main__':
                       device=device,
                       accuracy=accuracy)
     # 保存模型参数
-    torch.save(CNN_model.state_dict(), "CNN_model_parameter_whole_dataset.pkl")
-    
+    torch.save(CNN_model.state_dict(), "./CNN_model_parameter2.pkl")
+
     plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
     plt.ylabel('loss for whole dataset')
     plt.xlabel('num_data / batch_size * epoch')
     plt.grid()
-    plt.savefig('../plot/loss/loss_whole_Flevoland4_CNN.png')
+    plt.savefig('../plot/loss/loss_whole_Flevoland4_CNN_test.png')
     plt.show()
-    
+
     plt.plot(list(range(len(accuracy))), accuracy, 'r', label='CNN')
     plt.ylabel('accuracy for CNN_test dataset')
     plt.xlabel('epoch')
     plt.grid()
-    plt.savefig('../plot/accuracy/accuracy_whole_Flevoland4_CNN.png')
+    plt.savefig('../plot/accuracy/accuracy_whole_Flevoland4_CNN_test.png')
     plt.show()
-

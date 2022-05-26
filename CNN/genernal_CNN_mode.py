@@ -45,11 +45,10 @@ class CNN_test:
             for data in test_loader:
                 images, labels = data
                 images, labels = images.to(device), labels.to(device)
-                # print('img_shape:', images.shape)
-                print('label:', labels)
+                print('img_dtype:', type(images))
+                print('img_shape:', images.shape)
                 outputs = model(images)
                 _, predicted = torch.max(outputs.data, dim=1)
-                print('predict:', predicted)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
             
@@ -72,13 +71,14 @@ class CNN_predict:
                 predict_data = np.expand_dims(predict_data, 0)
                 predict_data = torch.tensor(predict_data, dtype=torch.float32)
                 predict_data = predict_data.to(device)
+                # print('predict_data_dtype:', type(predict_data))
+                # print('predict_data_shape:', predict_data.shape)
                 predict_label = model(predict_data)
                 _, predict_label = torch.max(predict_label.data, dim=1)
-                print('predict_label:', predict_label)
-                # predict_label = round(predict_label.values)
+                # print('predict_label:', predict_label)
                 # predict_labels[row][column] = predict_label
+                print('predict_label:', predict_label.item())
                 sheet.write(row, column, predict_label.item())
-                print('predict_label_value:', predict_label.item())
         book.close()
         plot_mod = plot_mode(mode='predict')
         plot_mod.plot_labels(label_path=target_path,

@@ -6,7 +6,7 @@ from CNN.general_CNN import CNN
 from data_process.data_preprocess import Data
 import os
 CNN_model = CNN()
-CNN_parameters = torch.load('../CNN/CNN_model_parameter_whole_dataset.pkl')  # 加载训练好的模型参数
+CNN_parameters = torch.load('../CNN/CNN_model_parameter2.pkl')  # 加载训练好的模型参数
 CNN_model.load_state_dict(CNN_parameters)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 CNN_model.to(device=device)
@@ -44,6 +44,7 @@ readme_json = '../data_patch/T_R/readme.json'
 with open(readme_json, 'r') as f:
     data_info = json.load(f)
 dim = data_info['dim']
+dim = (10, 10)
 predict_datas = data.get_data(data_paths=data_paths, dim=dim)
 print('数据读取完毕')
 target_path = '../data/prepro_flevoland4'

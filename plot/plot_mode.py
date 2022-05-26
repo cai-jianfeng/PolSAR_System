@@ -7,7 +7,7 @@ import cv2
 import numpy as np
 import matplotlib.pyplot as plt
 
-colors = [[255, 255, 255]]
+colors = []
 
 
 class plot_mode:
@@ -27,11 +27,13 @@ class plot_mode:
             for i in range(rows):
                 color = [color_sheet.cell_value(i, 0), color_sheet.cell_value(i, 1), color_sheet.cell_value(i, 2)]
                 colors.append(color)
+            print('颜色矩阵读取完成')
         if label_path:
             labels_sheets = xlrd.open_workbook(label_path)
             labels_sheet = labels_sheets.sheet_by_index(0)
             rows = labels_sheet.nrows
             cols = labels_sheet.ncols
+            print('label读取完成')
             R = np.zeros((rows, cols), dtype='uint8')
             G = np.zeros((rows, cols), dtype='uint8')
             B = np.zeros((rows, cols), dtype='uint8')
