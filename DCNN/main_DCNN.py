@@ -80,12 +80,13 @@ test_loader = DataLoader(test_dataset,
                          batch_size=batch_size)
 
 DCNN_model = DoubleCNN.Double_CNN()
-device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 DCNN_model.to(device=device)
 
 # criterion = torch.nn.MultiLabelSoftMarginLoss()
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(params=DCNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
+# optimizer = optim.SGD(params=DCNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
+optimizer = optim.Adam(params=DCNN_model.parameters(), lr=train_parameters['learning_strategy']['lr'])
 CNN_train = genernal_CNN_mode.CNN_train()
 CNN_test = genernal_CNN_mode.CNN_test()
 

@@ -45,8 +45,8 @@ class CNN_test:
             for data in test_loader:
                 images, labels = data
                 images, labels = images.to(device), labels.to(device)
-                print('img_dtype:', type(images))
-                print('img_shape:', images.shape)
+                # print('img_dtype:', type(images))
+                # print('img_shape:', images.shape)
                 outputs = model(images)
                 _, predicted = torch.max(outputs.data, dim=1)
                 total += labels.size(0)
@@ -84,7 +84,3 @@ class CNN_predict:
         plot_mod.plot_labels(label_path=target_path,
                              color_path=color_path,
                              label_pic_name=label_pic_name)
-                
-        
-        
-        
