@@ -135,7 +135,11 @@ class Data:
                 predict_list.append(target_paths + '\t%d' % label + '\n')
                 sum_predict_list += 1
                 num += 1
-
+                if num == 100:
+                    flag = 1
+                    break
+            if flag == 1:
+                break
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
             for eval_data in eval_list:
@@ -203,12 +207,19 @@ class Data:
                 # print(num, ':', label)
                 if num % 100 == 0:
                     train_list.append(target_paths + '\t%d' % label + '\n')
+                    sum_train_list += 1
                 if num % 1000 == 0:
                     eval_list.append(target_paths + '\t%d' % label + '\n')
+                    sum_eval_list += 1
                 predict_list.append(target_paths + '\t%d' % label + '\n')
                 sum_predict_list += 1
                 num += 1
-
+                if num == 100:
+                    flag = 1
+                    break
+            if flag == 1:
+                break
+                
         random.shuffle(eval_list)  # 打乱测试集
         with open(eval_list_path, 'a') as f:
             for eval_data in eval_list:
