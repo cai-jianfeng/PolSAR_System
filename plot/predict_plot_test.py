@@ -11,10 +11,10 @@ import cv2
 绘制预测图
 '''
 # plot = plot_mode(mode='predict')
-label_predcit_path = '../data/predict_labels.xlsx'
+label_predcit_path = '../data/prepro_flevoland4/predict_labels.xlsx'
 label_path = '../data/prepro_flevoland4/pre_data/label.xlsx'
 color_path = '../data/prepro_flevoland4/pre_data/color.xlsx'
-label_pic = 'flevoland_predict_CNN_compare'
+label_pic = 'flevoland_predict_CNN_compared2'
 mode = 'predict'
 # plot.plot_labels(label_path=label_predcit_path,
 #                  color_path=color_path,
@@ -45,8 +45,8 @@ for row in range(rows):
         # if label != 0:
         #     num += 1 if label_predict == label else 0
         #     nums += 1
-        num += 1 if label_predict == label and label_predict == 2 else 0
-        nums += 1 if label == 2 else 0
+        num += 1 if label_predict == label else 0
+        nums += 1
         # label_predict = label_predict if label_predict != 0 else label
         label_predict = int(label_predict)
         label = int(label)
@@ -58,7 +58,7 @@ for row in range(rows):
             R[row][col] = colors[label_predict][0]
             G[row][col] = colors[label_predict][1]
             B[row][col] = colors[label_predict][2]
-        
+
 acc = num / nums
 print('acc:', acc)
 label_map = cv2.merge([B, G, R])
