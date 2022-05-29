@@ -21,7 +21,7 @@ train_parameters = {
     "data_path": '../data/prepro_flevoland4/pre_data/TR.xlsx',
     "label_path": '../data/prepro_flevoland4/pre_data/label.xlsx',
     "target_path": '../data_patch/T_R',  # 数据集的路径
-    "num_epochs": 20,  # 训练轮数
+    "num_epochs": 10,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
         "lr": 0.005  # 超参数学习率
@@ -80,12 +80,13 @@ test_loader = DataLoader(test_dataset,
                          batch_size=batch_size)
 
 GoogleNet_model = GoogleNet.Net()
-device = torch.device('cude:0' if torch.cuda.is_available() else 'cpu')
+device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 GoogleNet_model.to(device=device)
 
 # criterion = torch.nn.MultiLabelSoftMarginLoss()
 criterion = torch.nn.CrossEntropyLoss()
-optimizer = optim.SGD(params=GoogleNet_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
+# optimizer = optim.SGD(params=GoogleNet_model.parameters(), lr=train_parameters['learning_strategy']['lr'], momentum=0.5)
+optimizer = optim.Adam(params=GoogleNet_model.parameters(), lr=train_parameters['learning_strategy']['lr'])
 CNN_train = genernal_CNN_mode.CNN_train()
 CNN_test = genernal_CNN_mode.CNN_test()
 
@@ -105,7 +106,7 @@ if __name__ == '__main__':
                       device=device,
                       accuracy=accuracy)
     # 保存模型参数
-    torch.save(GoogleNet_model.state_dict(), "./Google_model_parameter2.pkl")
+    torch.save(GoogleNet_model.state_dict(), "./Google_model_parameter_whole_dataset_10%_10.pkl")
     
     plot_mode = plot_mode()
     plot_mode.plt_image(title='GoogleNet',
@@ -114,7 +115,7 @@ if __name__ == '__main__':
                         label='GoogleNet',
                         xlabel='num_data / batch_size * epoch',
                         ylabel='loss for whole dataset',
-                        save_path='../plot/loss/lossFlevoland4_GoogleNet2.png',
+                        save_path='../plot/loss/lossFlevoland4_GoogleNet_whole_dataset_10%_10.png',
                         color='r')
     plot_mode.plt_image(title='GoogleNet',
                         x_data=list(range(len(accuracy))),
@@ -122,5 +123,5 @@ if __name__ == '__main__':
                         label='GoogleNet',
                         xlabel='epoch',
                         ylabel='accuracy for GoogleNet_test dataset',
-                        save_path='../plot/accuracy/accuracy_Flevoland4_GoogleNet2.png',
+                        save_path='../plot/accuracy/accuracy_Flevoland4_GoogleNet_whole_dataset_10%_10.png',
                         color='r')

@@ -11,7 +11,7 @@ import cv2
 绘制预测图
 '''
 # plot = plot_mode(mode='predict')
-label_predcit_path = '../data/prepro_flevoland4/predict_labels.xlsx'
+label_predcit_path = '../data/prepro_flevoland4/predict_labels_DCNN.xlsx'
 label_path = '../data/prepro_flevoland4/pre_data/label.xlsx'
 color_path = '../data/prepro_flevoland4/pre_data/color.xlsx'
 label_pic = 'flevoland_predict_CNN_compared2'
