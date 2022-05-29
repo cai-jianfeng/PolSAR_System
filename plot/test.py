@@ -6,7 +6,7 @@ from CNN.general_CNN import CNN
 from data_process.data_preprocess import Data
 import os
 CNN_model = CNN()
-CNN_parameters = torch.load('../CNN/CNN_model_parameter2.pkl')  # 加载训练好的模型参数
+CNN_parameters = torch.load('../CNN/CNN_model_parameter_test.pkl')  # 加载训练好的模型参数
 CNN_model.load_state_dict(CNN_parameters)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
 CNN_model.to(device=device)

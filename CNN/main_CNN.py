@@ -15,12 +15,12 @@ from CNN import genernal_CNN_mode
 from data_process.data_preprocess import Data
 
 train_parameters = {
-    "input_size": [9, 9, 9],  # 输入的shape
+    "input_size": [9, 7, 7],  # 输入的shape
     "class_dim": 5,  # 分类数
     "data_path": '../data/prepro_flevoland4/pre_data/TR.xlsx',
     "label_path": '../data/prepro_flevoland4/pre_data/label.xlsx',
     "target_path": '../data_patch/T_R',  # 数据集的路径
-    "num_epochs": 40,  # 训练轮数
+    "num_epochs": 10,  # 训练轮数
     "train_batch_size": 64,  # 批次的大小
     "learning_strategy": {  # 优化函数相关的配置
         "lr": 0.005  # 超参数学习率
@@ -106,7 +106,7 @@ if __name__ == '__main__':
                       device=device,
                       accuracy=accuracy)
     # 保存模型参数
-    torch.save(CNN_model.state_dict(), "./CNN_model_parameter2.pkl")
+    torch.save(CNN_model.state_dict(), "./CNN_model_parameter_test.pkl")
 
     plt.plot(list(range(len(cost))), cost, 'r', label='CNN')
     plt.ylabel('loss for whole dataset')

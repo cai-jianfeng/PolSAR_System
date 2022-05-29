@@ -40,7 +40,7 @@ class Data:
                     data_set[row][column] = data
             data_sets.append(data_set)
         data_sets = np.array(data_sets)
-        data_sets = self.data_dim_change(data_sets)
+        # data_sets = self.data_dim_change(data_sets)
         # self.data_sets = data_sets
         return data_sets
     

@@ -73,7 +73,7 @@ class PolSARDataset(Dataset):
         # return pixs, label
         data_path = self.data_paths[index]
         data = self.data.get_data_list(data_path=data_path)
-        # data = self.data.data_dim_change(data)
+        data = self.data.data_dim_change(data)
         data = np.array(data).astype('float32')
         data = self.transform(data)
         label = self.labels[index]
