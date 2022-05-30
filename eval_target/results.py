@@ -15,7 +15,7 @@ class result:
         predict_sheet = predict_book.sheet_by_index(0)
         rows = predict_sheet.nrows
         cols = predict_sheet.ncols
-        num ,totoal = 0, 0
+        num, totoal = 0, 0
         nums = 0
         for row in range(rows):
             for col in range(cols):
