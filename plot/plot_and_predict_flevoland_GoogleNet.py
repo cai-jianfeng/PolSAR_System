@@ -1,15 +1,19 @@
+"""
+created on:2022/5/30 13:10
+@author:caijianfeng
+"""
 import json
 from torchvision import transforms
 import torch
 from CNN.genernal_CNN_mode import CNN_predict
-from CNN.general_CNN import CNN
+from SNN.GoogleNet import Net
 from data_process.data_preprocess import Data
 import os
-CNN_model = CNN()
-CNN_parameters = torch.load('../CNN/CNN_model_parameter_test.pkl')  # 加载训练好的模型参数
-CNN_model.load_state_dict(CNN_parameters)
+GoogleNet_model = Net()
+GoogleNet_parameters = torch.load('../SNN/Google_model_parameter_whole_dataset_10%_10.pkl')  # 加载训练好的模型参数
+GoogleNet_model.load_state_dict(GoogleNet_parameters)
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
-CNN_model.to(device=device)
+GoogleNet_model.to(device=device)
 data_path = '../data/prepro_flevoland4/pre_data/TR.xlsx'
 data_paths = []
 data = Data()
@@ -27,7 +31,7 @@ if os.path.getsize(target_path) == 0:
     with open(eval_list_path, 'w') as f:
         f.seek(0)
         f.truncate()  # 从当前位置截断
-    data.save_data_label_segmentation_T_R(data_path=data_path,
+    data.save_data_label_segmentation_TRI(data_path=data_path,
                                           label_path=label_path,
                                           target_path=target_path,
                                           train_list_path=train_list_path,
@@ -44,17 +48,16 @@ readme_json = '../data_patch/T_R/readme.json'
 with open(readme_json, 'r') as f:
     data_info = json.load(f)
 dim = data_info['dim']
-dim = (10, 10)
 predict_datas = data.get_data(data_paths=data_paths, dim=dim)
 print('数据读取完毕')
 target_path = '../data/prepro_flevoland4'
 color_path = '../data/prepro_flevoland4/pre_data/color.xlsx'
-label_pic_name = 'flevoland4_CNN'
+label_pic_name = 'flevoland4_CNN_10%_10'
 transform = transforms.Compose([
     transforms.ToTensor(),
 ])
 predict_model = CNN_predict()
-predict_model.predict(model=CNN_model,
+predict_model.predict(model=GoogleNet_model,
                       predict_datas=predict_datas,
                       target_path=target_path,
                       color_path=color_path,
