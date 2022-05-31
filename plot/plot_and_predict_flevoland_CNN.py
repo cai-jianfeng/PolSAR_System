@@ -53,7 +53,7 @@ predict_datas = data.get_data(data_paths=data_paths, dim=dim)
 print('数据读取完毕')
 target_path = '../data/prepro_flevoland4'
 color_path = '../data/prepro_flevoland4/pre_data/color.xlsx'
-label_pic_name = 'flevoland4_CNN'
+label_pic_name = 'flevoland4_CNN_10%_10'
 transform = transforms.Compose([
     transforms.ToTensor(),
 ])

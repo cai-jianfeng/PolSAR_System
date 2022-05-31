@@ -9,6 +9,7 @@ from CNN.genernal_CNN_mode import CNN_predict
 from SNN.GoogleNet import Net
 from data_process.data_preprocess import Data
 import os
+
 GoogleNet_model = Net()
 GoogleNet_parameters = torch.load('../SNN/Google_model_parameter_whole_dataset_10%_10.pkl')  # 加载训练好的模型参数
 GoogleNet_model.load_state_dict(GoogleNet_parameters)
@@ -52,7 +53,7 @@ predict_datas = data.get_data(data_paths=data_paths, dim=dim)
 print('数据读取完毕')
 target_path = '../data/prepro_flevoland4'
 color_path = '../data/prepro_flevoland4/pre_data/color.xlsx'
-label_pic_name = 'flevoland4_CNN_10%_10'
+label_pic_name = 'flevoland4_Google_10%_10'
 transform = transforms.Compose([
     transforms.ToTensor(),
 ])

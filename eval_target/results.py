@@ -45,4 +45,13 @@ class result:
                 num += 1 if label == predict else 0
         acc = num / (rows * cols)
         return acc
+    
+    def OA(self):
+        pass
+    
+    def AA(self):
+        pass
+    
+    def Kappa(self):
+        pass
         
