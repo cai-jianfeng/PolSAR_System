@@ -113,16 +113,16 @@ class Data:
         predict_list = []
         data_detail_list = {}
         flag = 0
-        for i in range(0, dim[0] - patch_size[0]):
-            for j in range(0, dim[1] - patch_size[1]):
+        for i in range(0, dim[1] - patch_size[0]):
+            for j in range(0, dim[2] - patch_size[1]):
                 target_paths = os.path.join(target_path, 'TR' + str(num) + '.xlsx')
                 # if not os.path.exists(target_paths):
                 book = xlsxwriter.Workbook(filename=target_paths)
-                for channel in range(dim[2]):
+                for channel in range(dim[0]):
                     sheet = book.add_worksheet('sheet' + str(channel))
                     for row in range(patch_size[0]):
                         for column in range(patch_size[1]):
-                            sheet.write(row, column, data_sets[i + row][j + column][channel])
+                            sheet.write(row, column, data_sets[channel][i + row][j + column])
                 book.close()
                 label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
                 # print(num, ':', label)
@@ -152,7 +152,7 @@ class Data:
             for predict_data in predict_list:
                 f.write(predict_data)
         data_detail_list['data_list_path'] = target_path
-        data_detail_list['dim'] = [dim[0] - patch_size[0], dim[1] - patch_size[1]]
+        data_detail_list['dim'] = [dim[1] - patch_size[0], dim[2] - patch_size[1]]
         data_detail_list['train_num'] = sum_train_list
         data_detail_list['eval_num'] = sum_eval_list
         data_detail_list['predict_num'] = sum_predict_list
@@ -179,7 +179,7 @@ class Data:
         data_R_sets = self.get_data_list(data_path=data_R_path)
         data_I_sets = self.get_data_list(data_path=data_I_path)
         label_set = self.get_label_list(label_path=label_path)
-        dim = data_R_sets.shape  # 数据维度:(row, column, channel)
+        dim = data_R_sets.shape  # 数据维度:(channel, row, column)
         num = 0
         sum_train_list, sum_eval_list, sum_predict_list = 0, 0, 0
         train_list = []
@@ -187,21 +187,21 @@ class Data:
         predict_list = []
         data_detail_list = {}
         flag = 0
-        for i in range(0, dim[0] - patch_size[0]):
-            for j in range(0, dim[1] - patch_size[1]):
+        for i in range(0, dim[1] - patch_size[0]):
+            for j in range(0, dim[2] - patch_size[1]):
                 target_paths = os.path.join(target_path, 'TRI' + str(num) + '.xlsx')
                 if not os.path.exists(target_paths):
                     book = xlsxwriter.Workbook(filename=target_paths)
-                    for channel in range(dim[2]):
+                    for channel in range(dim[0]):
                         sheet = book.add_worksheet('sheet_R' + str(channel))
                         for row in range(patch_size[0]):
                             for column in range(patch_size[1]):
-                                sheet.write(row, column, data_R_sets[i + row][j + column][channel])
-                    for channel in range(dim[2]):
+                                sheet.write(row, column, data_R_sets[channel][i + row][j + column])
+                    for channel in range(dim[0]):
                         sheet = book.add_worksheet('sheet_I' + str(channel))
                         for row in range(patch_size[0]):
                             for column in range(patch_size[1]):
-                                sheet.write(row, column, data_I_sets[i + row][j + column][channel])
+                                sheet.write(row, column, data_I_sets[channel][i + row][j + column])
                     book.close()
                 label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
                 # print(num, ':', label)
@@ -232,7 +232,88 @@ class Data:
             for predict_data in predict_list:
                 f.write(predict_data)
         data_detail_list['data_list_path'] = target_path
-        data_detail_list['dim'] = [dim[0] - patch_size[0], dim[1] - patch_size[1]]
+        data_detail_list['dim'] = [dim[1] - patch_size[0], dim[2] - patch_size[1]]
+        data_detail_list['train_num'] = sum_train_list
+        data_detail_list['eval_num'] = sum_eval_list
+        data_detail_list['predict_num'] = sum_predict_list
+        jsons = json.dumps(data_detail_list, sort_keys=True, indent=4, separators=(',', ':'))
+        with open(os.path.join(target_path, 'readme.json'), 'w') as f:
+            f.write(jsons)
+        print('生成数据列表完成！')
+        
+    def save_data_label_segmentation_TRI_without_label0(self, data_path, label_path, target_path, train_list_path, eval_list_path,
+                                         patch_size, predict_list_path):
+        """
+        数据集切分（对一整张图像的数据进行切分成patch大小并保存）
+        :param predict_list_path: 预测集说明文件 --> str
+        :param data_path: 原始数据(整张图像)的路径(实部, 虚部) --> tuple
+        :param label_path: 原始标签(整张图像)的路径 --> str
+        :param target_path: 分割后的数据集保存位置(文件夹) --> str
+        :param train_list_path: 训练集说明文件 --> str
+        :param eval_list_path: 测试集说明文件 --> str
+        :param patch_size: 切分的数据块的大小([row, column]) --> tuple
+        :return: None
+        """
+        data_R_path = data_path[0]  # 实部数据集路径
+        data_I_path = data_path[1]  # 虚部数据集路径
+        data_R_sets = self.get_data_list(data_path=data_R_path)
+        data_I_sets = self.get_data_list(data_path=data_I_path)
+        label_set = self.get_label_list(label_path=label_path)
+        dim = data_R_sets.shape  # 数据维度:(channel, row, column)
+        print('dim:', dim)
+        num = 0
+        sum_train_list, sum_eval_list, sum_predict_list = 0, 0, 0
+        train_list = []
+        eval_list = []
+        predict_list = []
+        data_detail_list = {}
+        flag = 0
+        for i in range(0, dim[1] - patch_size[0]):
+            for j in range(0, dim[2] - patch_size[1]):
+                target_paths = os.path.join(target_path, 'TRI' + str(num) + '.xlsx')
+                if not os.path.exists(target_paths):
+                    book = xlsxwriter.Workbook(filename=target_paths)
+                    for channel in range(dim[0]):
+                        sheet = book.add_worksheet('sheet_R' + str(channel))
+                        for row in range(patch_size[0]):
+                            for column in range(patch_size[1]):
+                                sheet.write(row, column, data_R_sets[channel][i + row][j + column])
+                    for channel in range(dim[0]):
+                        sheet = book.add_worksheet('sheet_I' + str(channel))
+                        for row in range(patch_size[0]):
+                            for column in range(patch_size[1]):
+                                sheet.write(row, column, data_I_sets[channel][i + row][j + column])
+                    book.close()
+                label = label_set[i + patch_size[0] // 2][j + patch_size[1] // 2]
+                # print(num, ':', label)
+                if num % 10 == 0 and label != 0:
+                    train_list.append(target_paths + '\t%d' % label + '\n')
+                    sum_train_list += 1
+                if num % 100 == 0 and label != 0:
+                    eval_list.append(target_paths + '\t%d' % label + '\n')
+                    sum_eval_list += 1
+                predict_list.append(target_paths + '\t%d' % label + '\n')
+                sum_predict_list += 1
+                num += 1
+                if num == 100:
+                    flag = 1
+                    break
+            if flag == 1:
+                break
+    
+        random.shuffle(eval_list)  # 打乱测试集
+        with open(eval_list_path, 'a') as f:
+            for eval_data in eval_list:
+                f.write(eval_data)
+        random.shuffle(train_list)  # 打乱训练集
+        with open(train_list_path, 'a') as f:
+            for train_data in train_list:
+                f.write(train_data)
+        with open(predict_list_path, 'a') as f:
+            for predict_data in predict_list:
+                f.write(predict_data)
+        data_detail_list['data_list_path'] = target_path
+        data_detail_list['dim'] = [dim[1] - patch_size[0], dim[2] - patch_size[1]]
         data_detail_list['train_num'] = sum_train_list
         data_detail_list['eval_num'] = sum_eval_list
         data_detail_list['predict_num'] = sum_predict_list

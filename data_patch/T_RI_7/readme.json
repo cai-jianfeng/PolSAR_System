@@ -1,0 +1,10 @@
+{
+    "data_list_path":"..//data_patch/T_RI_7",
+    "dim":[
+        1393,
+        1193
+    ],
+    "eval_num":9257,
+    "predict_num":1661849,
+    "train_num":93502
+}

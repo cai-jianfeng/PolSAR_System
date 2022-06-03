@@ -8,7 +8,7 @@ import cv2
 
 pre_path = '../data/prepro_flevoland4/predict_labels_DCNN.xlsx'
 color_path = '../data/prepro_flevoland4/pre_data/color.xlsx'
-label_path = '../data_patch/T_R/predict.txt'
+label_path = '../data_patch/T_RI/predict.txt'
 label_pic_name = 'flevoland_DCNN_10%_10_without_label0'
 mode = 'predict'
 colors = []

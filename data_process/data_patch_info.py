@@ -2,7 +2,7 @@
 created on:2022/5/28 14:47
 @author:caijianfeng
 """
-train_path = './eval.txt'
+train_path = '../data_patch/T_R/eval.txt'
 with open(train_path, 'r') as f:
     infos = f.readlines()
 label_dict = dict()
