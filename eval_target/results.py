@@ -46,6 +46,25 @@ class result:
         acc = num / (rows * cols)
         return acc
     
+    def accuracy_readme_json_without_label0(self, label_path, predict_path, dim):
+        label_book = xlrd.open_workbook(label_path)
+        predict_book = xlrd.open_workbook(predict_path)
+        label_sheet = label_book.sheet_by_index(0)
+        predict_sheet = predict_book.sheet_by_index(0)
+        rows = predict_sheet.nrows
+        cols = predict_sheet.ncols
+        num = 0
+        nums = 0
+        for row in range(rows):
+            for col in range(cols):
+                label = label_sheet.cell_value(row + dim[0] // 2, col + dim[1] // 2)
+                predict = predict_sheet.cell_value(row, col)
+                if label != 0:
+                    num += 1 if label == predict else 0
+                    nums += 1
+        acc = num / nums
+        return acc
+    
     def OA(self):
         pass
     
