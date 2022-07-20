@@ -21,13 +21,13 @@ class result:
             for col in range(cols):
                 label = int(info[nums].strip().split('\t')[1])
                 predict = predict_sheet.cell_value(row, col)
-                # if label != 0:
-                #     num += 1 if label == predict else 0
-                #     totoal += 1
-                num += 1 if label == predict else 0
-                nums += 1
-        acc = num / nums
-        # acc = num / totoal
+                if label != 0:
+                    num += 1 if label == predict else 0
+                    totoal += 1
+                # num += 1 if label == predict else 0
+                # nums += 1
+        # acc = num / nums
+        acc = num / totoal
         return acc
     
     def accuracy_readme_json(self, label_path, predict_path, dim):

@@ -13,7 +13,7 @@ from data_process.dataset import PolSARDataset
 from CNN.general_CNN_without_label0 import CNN
 from CNN import genernal_CNN_mode
 from data_process.data_preprocess import Data
-
+from tqdm import tqdm
 train_parameters = {
     "input_size": [9, 7, 7],  # 输入的shape
     "class_dim": 4,  # 分类数
@@ -92,7 +92,7 @@ CNN_test = genernal_CNN_mode.CNN_test()
 if __name__ == '__main__':
     cost = []
     accuracy = []
-    for epoch in range(train_parameters['num_epochs']):
+    for epoch in tqdm(range(train_parameters['num_epochs'])):
         CNN_train.train(model=CNN_model,
                         epoch=epoch,
                         train_loader=train_loader,

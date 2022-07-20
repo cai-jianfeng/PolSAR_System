@@ -8,6 +8,8 @@ import xlrd
 import xlsxwriter
 import os
 import numpy as np
+from tqdm import tqdm
+import sys
 
 
 class CNN_train:
@@ -16,7 +18,8 @@ class CNN_train:
     
     def train(self, model, epoch, train_loader, device, optimizer, criterion, cost):
         running_loss = 0.0
-        for batch_idx, data in enumerate(train_loader, 0):
+        train_bar = tqdm(train_loader, file=sys.stdout)
+        for batch_idx, data in enumerate(train_bar):
             inputs, target = data
             # print('target.shape:', target.shape)
             inputs, target = inputs.to(device), target.to(device)
@@ -27,34 +30,38 @@ class CNN_train:
             optimizer.step()
             
             # running_loss += loss.item()
-            running_loss += loss.item()
-            if batch_idx % 30 == 29:
-                print('[%d, %5d] loss: %.3f' % (epoch + 1, batch_idx + 1, running_loss / 30))
-                cost.append(running_loss / 30)
-                running_loss = 0.0
+            running_loss = loss.item()
+            # if batch_idx % 10 == 9:
+            #     print('[%d, %5d] loss: %.3f' % (epoch + 1, batch_idx + 1, running_loss / 30))
+            #     cost.append(running_loss / 10)
+            #     running_loss = 0.0
+            train_bar.desc = 'train epoch[{}/{}] loss:{: .3f}'.format(epoch[0] + 1, epoch[1], running_loss)
             # print('[%d, %5d] loss: %.3f' % (epoch + 1, batch_idx + 1, running_loss))
-            # cost.append(running_loss)
-            # running_loss = 0.0
+            cost.append(running_loss)
+            running_loss = 0.0
 
 
 class CNN_test:
-    def test(self, model, test_loader, device, accuracy):
+    def test(self, model, epoch, test_loader, device, accuracy):
         correct = 0
         total = 0
         with torch.no_grad():
-            for data in test_loader:
+            test_bar = tqdm(test_loader, file=sys.stdout)
+            for data in test_bar:
                 images, labels = data
                 images, labels = images.to(device), labels.to(device)
                 # print('img_dtype:', type(images))
                 # print('img_shape:', images.shape)
                 outputs = model(images)
                 _, predicted = torch.max(outputs.data, dim=1)
+                print('predict_shape:', predicted.shape, 'label_shape:', labels.shape)
                 total += labels.size(0)
                 correct += (predicted == labels).sum().item()
-            
-            print('Acuuracy on NN_test set: %d %%' % (100 * correct / total))
-            accuracy.append(100 * correct / total)
-
+                acc = 100 * correct / total
+            test_bar.desc = 'eval epoch[{}/{}] Accuracy{: .3f}%'.format(epoch[0] + 1, epoch[1], acc)
+            # print('Acuuracy on NN_test set: %d %%' % (100 * correct / total))
+            # accuracy.append(100 * correct / total)
+            accuracy.append(acc)
 
 class CNN_predict:
     def predict(self, model, predict_datas, target_path, color_path, label_pic_name, transform, device):
